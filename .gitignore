@@ -1,4 +1,18 @@
-.DS_Store
+# Python
 __pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
 .venv/
-*.pyc
+venv/
+
+# 환경 변수
+.env
+.env.*
+
+# macOS
+.DS_Store
+
+# 산출물·비공개 샘플
+outputs/
+samples/private/
