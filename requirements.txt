@@ -1,4 +1,11 @@
 fastapi
 uvicorn[standard]
+pypdfium2
+pypdf
+reportlab
+pillow
+opencv-python-headless
+pytesseract
+kiwipiepy
 pytest
 httpx
