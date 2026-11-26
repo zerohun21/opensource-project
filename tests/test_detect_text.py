@@ -74,3 +74,10 @@ def test_bare_number_not_student_id() -> None:
 def test_kiwi_name() -> None:
     cands = detect_text([make_page(["담당 교수 이순신 님이 확인했습니다."])])
     assert any(c.kind == Kind.NAME and c.source == "kiwi" for c in cands)
+
+
+def test_label_does_not_cross_into_next_label() -> None:
+    cands = detect_text([make_page(["성명:", "학번: 20261234"])])
+    assert [c for c in cands if c.kind == Kind.NAME] == []
+    cands = detect_text([make_page(["이름 학번", "홍길동 20261234"])])  # 표 헤더도 이름으로 잡지 않음
+    assert all(c.bbox.y0 > 0 for c in cands if c.kind == Kind.NAME)

@@ -7,7 +7,8 @@ from kiwipiepy import Kiwi
 from core.models import Candidate, Kind, Page
 
 _KIWI = Kiwi()  # 생성 비용이 커서 모듈에서 한 번만
-_LABEL = re.compile(r"(?:성명|이름|작성자|담당자)\s*:?\s*([가-힣]{2,4})(?![가-힣])")
+_LABEL_WORDS = {"성명", "이름", "작성자", "담당자", "학번", "주민등록번호", "전화번호", "이메일"}
+_LABEL = re.compile(r"(?:성명|이름|작성자|담당자)\s*:?\s*([가-힣]{2,4})(?![가-힣:])")
 _HANGUL_2_4 = re.compile(r"[가-힣]{2,4}")
 
 
@@ -16,12 +17,14 @@ def find(page: Page) -> list[Candidate]:
     out: list[Candidate] = []
     taken: list[tuple[int, int]] = []
     for m in _LABEL.finditer(text):
+        if m.group(1) in _LABEL_WORDS:
+            continue
         if box := page.bbox_of(m.start(1), m.end(1)):
             out.append(Candidate(page.index, Kind.NAME, box, 0.9, "label"))
             taken.append(m.span(1))
     for t in _KIWI.tokenize(text):
         s, e = t.start, t.start + t.len
-        if t.tag != "NNP" or not _HANGUL_2_4.fullmatch(t.form):
+        if t.tag != "NNP" or not _HANGUL_2_4.fullmatch(t.form) or t.form in _LABEL_WORDS:
             continue
         if any(s < te and ts < e for ts, te in taken):
             continue
