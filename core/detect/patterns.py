@@ -7,9 +7,9 @@ from core.models import Candidate, Kind, Page
 _RULES: list[tuple[Kind, re.Pattern[str]]] = [
     # 생년월일(YYMMDD) + 뒷자리 첫 글자 1~4, 하이픈 선택
     (Kind.RRN, re.compile(r"(?<!\d)\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])-?[1-4]\d{6}(?!\d)")),
-    (Kind.PHONE, re.compile(r"(?<!\d)01[016789][-.]?\d{3,4}[-.]?\d{4}(?!\d)")),
-    # 지역번호: 02, 031~064
-    (Kind.PHONE, re.compile(r"(?<!\d)0(?:2|[3-6][1-5])[-.)]?\d{3,4}[-.]?\d{4}(?!\d)")),
+    (Kind.PHONE, re.compile(r"(?<!\d)01[016789][-. ]?\d{3,4}[-. ]?\d{4}(?!\d)")),
+    # 지역번호: 02, 031~064. 구분자는 - . ) 또는 공백 한 칸
+    (Kind.PHONE, re.compile(r"(?<!\d)0(?:2|[3-6][1-5])[-.) ]?\d{3,4}[-. ]?\d{4}(?!\d)")),
     (Kind.EMAIL, re.compile(r"[\w.+-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)+")),
 ]
 
